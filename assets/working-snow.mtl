@@ -1,0 +1,13 @@
+# Blender MTL File: 'Cargo-Logo-Christmas-working.blend'
+# Material Count: 1
+
+newmtl Material
+Ns 214.092573
+Ka 0.232558 0.232558 0.232558
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd /working-snow.jpg
