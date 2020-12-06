@@ -1,6 +1,6 @@
 # Blender v2.82 (sub 7) OBJ File: 'Cargo-Logo-Christmas-working.blend'
 # www.blender.org
-mtllib working-snow.mtl
+mtllib https://whitty64.github.io/sos-ar/assets/working-snow.mtl
 o Curve_Curve.001
 v -0.331532 0.377065 0.030000
 v -0.332100 0.375526 0.030000
