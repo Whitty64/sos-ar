@@ -16,14 +16,14 @@
         window.THREE.WebGLRenderer = window.THREE.WebGL1Renderer;
     </script>
     <script>
-        // const supportsVR = navigator.xr
-        // const loadingText = this.el.sceneEl.querySelector("#loading-text");
-        // if (supportsVR) {
-        //     console.log("Supported")
-        // }
-        // else {
-        //     alert("Maybe you can ask for a new phone for Christmas")
-        // }
+        const supportsVR = navigator.xr
+        const loadingText = document.querySelector("#loading-text");
+        if (supportsVR) {
+            console.log("Supported")
+        }
+        else {
+            alert("Sorry, you're device doesn't support Web AR.")
+        }
         // https://aframe.io/docs/1.0.0/introduction/writing-a-component.html
         // AFRAME.registerComponent("move", {
         //     tick: function () {
