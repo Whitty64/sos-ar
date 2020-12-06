@@ -22,17 +22,69 @@
             console.log("Supported")
         }
         else {
-            alert("Sorry, you're device doesn't support Web AR.")
+            alert("Sorry your device does not support Web AR")
         }
         // https://aframe.io/docs/1.0.0/introduction/writing-a-component.html
-        // AFRAME.registerComponent("move", {
-        //     tick: function () {
-        //         let obj3d = this.el.sceneEl.querySelector("a-nft");
-        //         // console.log(obj3d);
-        //         this.el.object3D.setRotationFromQuaternion(obj3d.object3D.quaternion);
-        //         this.el.object3D.position.set(obj3d.object3D.position.x + 100, obj3d.object3D.position.y + 2, obj3d.object3D.position.z - 150);
-        //     }
-        // });
+
+        AFRAME.registerComponent("listener", {
+            init: function () {
+                this.target = document.querySelector('#target');
+                this.prevPosition = null; // initially there is no position or rotation
+                this.prevRotation = null;
+                this.hasFoundMarker = false;
+                this.currentlyHasMarker = false;
+
+                this.el.sceneEl.addEventListener('markerFound', () => {
+                    this.hasFoundMarker = true;
+                    this.currentlyHasMarker = true;
+                });
+
+                this.el.sceneEl.addEventListener('markerLost', () => {
+                    this.currentlyHasMarker = false;
+                });
+            },
+
+            tick: function () {
+                if (!this.hasFoundMarker) {
+                    this.target.setAttribute('visible', 'false')
+                    return;
+                }
+
+                this.target.setAttribute('visible', 'true')
+
+                // Convert position from local -> world -> local
+                let pos = new THREE.Vector3
+                let rotation = new THREE.Quaternion;
+
+                if (this.currentlyHasMarker) {
+                    this.el.object3D.getWorldPosition(pos);
+                    this.el.parentElement.object3D.getWorldQuaternion(rotation);
+                } else {
+                    pos = this.prevPosition;
+                    rotation = this.prevRotation;
+                }
+
+                if (!this.prevPosition) {
+                    this.target.object3D.position.set(pos.x, pos.y, pos.z);
+                    this.prevPosition = pos
+                }
+
+                if (!this.prevRotation) {
+                    this.target.object3D.quaternion.set(rotation.x, rotation.y, rotation.z, rotation.w);
+                    this.prevRotation = rotation
+                }
+
+                // use the previous values to get an approximation
+                this.target.object3D.position.lerp(this.prevPosition, 0.1)
+
+                // this (below) may seem ugly, but the rotation is a euler, not a THREE.Vector3,
+                // so to use the lerp function i'm doing some probably unnecessary conversions
+                this.target.object3D.quaternion.slerp(this.prevRotation, 0.1)
+
+                this.prevPosition = pos
+                this.prevRotation = rotation
+            }
+        })
 
     </script>
 </head>
@@ -62,24 +114,26 @@
     <div class="arjs-loader">
         <div id="loading-text">Loading, please wait...</div>
     </div>
-
-    <a-scene embedded vr-mode-ui="enabled: false" arjs="trackingMethod: best; debugUIEnabled: false;"
+    <a-scene embedded vr-mode-ui="enabled: false" arjs="trackingMethod: best; debugUIEnabled: true;"
         renderer="logarithmicDepthBuffer: true;">
         <a-assets>
             <a-asset-item id="cargo-obj" src="./assets/working-snow.obj"></a-asset-item>
             <a-asset-item id="cargo-mtl" src="./assets/working-snow.mtl"></a-asset-item>
         </a-assets>
         <a-nft type="nft" url="sos-ar/sos-album-cover" smooth="true" smoothCount="10" smoothTolerance=".01"
-            smoothThreshold="0" emitevents="true">
-            <a-entity position="85 2 -250" obj-model="obj: #cargo-obj; mtl: #cargo-mtl" scale="125 125 125">
+            smoothThreshold="10" emitevents="true" opacity="0.5">
+            <a-entity listener position="85 2 -250">
             </a-entity>
         </a-nft>
+
+        <a-entity id="target" obj-model="obj: #cargo-obj; mtl: #cargo-mtl" scale="125 125 125">
+        </a-entity>
         <a-entity id="cameraWrapper">
-            <a-camera id="camera" look-controls-enabled="false"></a-camera>
+            <a-camera id="camera" look-controls-enabled="false">
+            </a-camera>
             <a-entity position="0 2.25 -10" particle-system="preset: snow; particleCount: 5000; size:3;"></a-entity>
         </a-entity>
     </a-scene>
-
 </body>
 
 </html>
