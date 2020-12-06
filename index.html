@@ -57,14 +57,14 @@
 
 <body style="margin : 0px; overflow: hidden;">
     <div class="arjs-loader">
-        <div id="loading-text">Loadingtest, please wait...<br>Try dragging left and right</div>
+        <div id="loading-text">Loading, please wait...<br>Try dragging left and right</div>
     </div>
     <a-scene embedded vr-mode-ui="enabled: false" arjs="trackingMethod: best; debugUIEnabled: false;">
         <a-assets>
             <a-asset-item id="cargo-obj" src="./assets/working-snow.obj"></a-asset-item>
             <a-asset-item id="cargo-mtl" src="./assets/working-snow.mtl"></a-asset-item>
         </a-assets>
-        <a-nft type="nft" url="./sos-album-cover" smooth="true" smoothCount="10" smoothTolerance=".01"
+        <a-nft type="nft" url="sos-ar/sos-album-cover" smooth="true" smoothCount="10" smoothTolerance=".01"
             smoothThreshold="5" emitevents="true">
             <a-entity position="100 2 -50" obj-model="obj: #cargo-obj; mtl: #cargo-mtl" scale="150 150 150"
                 rotation="-25 0 0">
